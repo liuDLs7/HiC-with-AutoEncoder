@@ -1,0 +1,5 @@
+*/
+!*.py
+*.pth
+model_test.py
+ttt.py
