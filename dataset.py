@@ -90,6 +90,7 @@ class MyDataset(Dataset):
         data_item_path = list(self.datas.keys())[idx]
         # data = torch.from_numpy(np.load(data_item_path)).float()
         data = np.load(data_item_path).astype(np.float32)
+        data = data/max(data)
         label = list(self.datas.values())[idx]
 
         if self.is_mask:
@@ -111,6 +112,7 @@ class MyDataset(Dataset):
                 self.gen_mask_time += time.time() - start_time
             else:
                 # 使用__init__中生成的索引
+
                 # with open(self.mask_file, 'r') as file:
                 #     mask_index = json.load(file)
                 mask_index = self.global_mask_index

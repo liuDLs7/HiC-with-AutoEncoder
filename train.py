@@ -21,8 +21,8 @@ model_path = 'autoencoder.pth'
 
 # 加载数据集
 train_dataset = MyDataset(root_dir=root_dir, is_shuffle=True, is_mask=True,
-                          random_mask=True, update_mask=False, is_train=True, mask_rate=0.1)
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=8, shuffle=True)
+                          random_mask=True, update_mask=True, is_train=True, mask_rate=0.1)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
 
 data_size = train_dataset.datasize
 
@@ -30,17 +30,17 @@ data_size = train_dataset.datasize
 is_pretrained = False
 
 # 创建模型实例并将其移动到GPU上
-model = Autoencoder(data_size)
+model = Autoencoder(data_size, sigmoid=True)
 if is_pretrained:
     model.load_state_dict(torch.load(model_path, map_location=device))
 model.to(device)
 
 # 定义损失函数和优化器
 criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
 # 训练模型
-num_epochs = 50
+num_epochs = 1000
 for epoch in range(num_epochs):
     # train_dataset.gen_mask_time = 0.0
     # train_dataset.read_dic_time = 0.0

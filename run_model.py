@@ -73,7 +73,7 @@ test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=Fa
 data_size = test_dataset.datasize
 
 # 创建模型实例
-model = Autoencoder(data_size).to(device)
+model = Autoencoder(data_size, sigmoid=True).to(device)
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.eval()
 
@@ -85,9 +85,15 @@ model.eval()
 # print(model.parameters()
 # exit(0)
 
-total = 0
+total = 0.0
+sum_similarity = 0.0
+cycles = 5
+i = 0
 with torch.no_grad():
-    for test_data in test_loader:
+    for i, test_data in enumerate(test_loader):
+
+        # file_name = list(test_dataset.datas.keys())[i]
+
         datas, _ = test_data
         if isinstance(datas, list):
             # 此时datas是由[original_datas,masked_datas]组成
@@ -101,6 +107,19 @@ with torch.no_grad():
         masked_datas = masked_datas.view(masked_datas.size(0), -1).to(device)
 
         reconstructed_datas = model(masked_datas).to(device)
+
+        # print(file_name)
+        # print(np.load(file_name))
+        # print(original_datas)
+        # print(reconstructed_datas)
+
+        sum_similarity += pearson_similarity(original_datas, reconstructed_datas)
+
+        total += 1
+
+        i += 1
+        if i > cycles:
+            break
         # print(reconstructed_datas)
 
         # print(datas[:20])
@@ -109,6 +128,6 @@ with torch.no_grad():
         # datas = datas.flatten().numpy()
         # reconstructed_datas = reconstructed_datas.flatten().numpy()
         # # print(sccByDiag(datas,reconstructed_datas))
-        print(pearson_similarity(original_datas, reconstructed_datas))
-        total += 1
+
+print('average similarity = ', sum_similarity / total)
 print(total)
