@@ -21,13 +21,13 @@ model_path = 'autoencoder.pth'
 
 # 加载数据集
 train_dataset = MyDataset(root_dir=root_dir, is_shuffle=True, is_mask=True,
-                          random_mask=True, update_mask=True, is_train=True, mask_rate=0.1)
+                          random_mask=True, update_mask=False, is_train=True, mask_rate=0.1)
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=8, shuffle=True)
 
 data_size = train_dataset.datasize
 
 # 是否使用训练过的模型继续训练
-is_pretrained = True
+is_pretrained = False
 
 # 创建模型实例并将其移动到GPU上
 model = Autoencoder(data_size)
