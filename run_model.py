@@ -7,6 +7,7 @@ from model import Autoencoder
 import os
 from dataset import MyDataset
 import numpy as np
+from torch.utils.data import DataLoader
 import time
 
 
@@ -62,7 +63,8 @@ print(device)
 # root_dir = 'contact_626_vector'
 root_dir = 'contact_626_diagvector3'
 
-model_path = 'autoencoder.pth'
+# model_path = 'autoencoder.pth'
+model_path = '75.pth'
 
 # 加载数据集
 
@@ -73,7 +75,7 @@ test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=Fa
 data_size = test_dataset.datasize
 
 # 创建模型实例
-model = Autoencoder(data_size, sigmoid=True).to(device)
+model = Autoencoder(data_size).to(device)
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.eval()
 
@@ -87,7 +89,7 @@ model.eval()
 
 total = 0.0
 sum_similarity = 0.0
-cycles = 5
+cycles = 99
 i = 0
 with torch.no_grad():
     for i, test_data in enumerate(test_loader):
@@ -111,7 +113,7 @@ with torch.no_grad():
         # print(file_name)
         # print(np.load(file_name))
         # print(original_datas)
-        # print(reconstructed_datas)
+        print(reconstructed_datas[:10])
 
         sum_similarity += pearson_similarity(original_datas, reconstructed_datas)
 

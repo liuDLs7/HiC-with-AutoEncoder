@@ -4,6 +4,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from model import Autoencoder
 import os
+from torch.utils.data import DataLoader
 from dataset import MyDataset
 # from model_test import Autoencoder
 import time
@@ -30,7 +31,7 @@ data_size = train_dataset.datasize
 is_pretrained = False
 
 # 创建模型实例并将其移动到GPU上
-model = Autoencoder(data_size, sigmoid=True)
+model = Autoencoder(data_size)
 if is_pretrained:
     model.load_state_dict(torch.load(model_path, map_location=device))
 model.to(device)

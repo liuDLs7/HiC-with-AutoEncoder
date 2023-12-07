@@ -90,7 +90,7 @@ class MyDataset(Dataset):
         data_item_path = list(self.datas.keys())[idx]
         # data = torch.from_numpy(np.load(data_item_path)).float()
         data = np.load(data_item_path).astype(np.float32)
-        data = data/max(data)
+        # data = data/max(data)
         label = list(self.datas.values())[idx]
 
         if self.is_mask:
